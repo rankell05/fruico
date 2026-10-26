@@ -201,7 +201,5 @@ Le store Redux centralise l'état global et comprend 4 tranches (*slices*) :
 | **`FRUICO10`** | **-10%** | Remise de bienvenue Fruico |
 
 
-Application déployée avec GitHub Pages :
-👉 **https://rankell05.github.io/fruico/**
 ---
 *Projet développé dans le cadre des travaux dirigés et pratiques du module WAMD - ENSTA 2026.*
