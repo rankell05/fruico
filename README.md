@@ -1,7 +1,7 @@
 # ❄️ FRUICO - Boutique E-Commerce de Fruits Surgelés (-18°C)
 
 > **Higher National School of Advanced Technologies (ENSTA)**  
-> **Spécialité :** SS/IA - Premier Semestre 2026  
+> **Spécialité :** SS - Premier Semestre 2026  
 > **Module :** WAMD (Web and Mobile Development)  
 > **TD - TP 2 :** Create a React Application with Redux for State Management  
 > **Enseignant :** Dr. S. SENHADJI  
@@ -10,7 +10,7 @@
 
 ## 1. Informations sur l'Étudiant & le Projet
 
-- **Nom & Prénom de l'Étudiant :** `[À renseigner / Votre Nom et Prénom]`
+- **Nom & Prénom de l'Étudiant :** `KELLAKH Ranyme`
 - **Nom de l'application / Boutique :** **FRUICO** (Fruico DZ - Surgelés & Fruits Givrés)
 - **Thématique & Identité Visuelle :** E-commerce de fruits surgelés haut de gamme en Algérie avec respect absolu de la chaîne du froid (-18°C), prix réels en Dinars Algériens (DZD) et livraison isotherme dans les 58 Wilayas.
 
@@ -200,5 +200,8 @@ Le store Redux centralise l'état global et comprend 4 tranches (*slices*) :
 | **`ENSTA2026`** | **-15%** | Offre spéciale labo WAMD pour les étudiants de l'ENSTA |
 | **`FRUICO10`** | **-10%** | Remise de bienvenue Fruico |
 
+
+Application déployée avec GitHub Pages :
+👉 **https://rankell05.github.io/fruico/**
 ---
 *Projet développé dans le cadre des travaux dirigés et pratiques du module WAMD - ENSTA 2026.*
