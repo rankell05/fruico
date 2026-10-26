@@ -49,7 +49,7 @@ export default function Navbar({ onOpenCart, onOpenFavorites }) {
           <div className="utility-left">
             <div className="utility-item">
               <Phone size={13} className="text-ice" />
-              <span>Service Client : <strong>0550 12 34 56</strong></span>
+              <span>Service Client : <strong>0123 45 67 89</strong></span>
             </div>
             <div className="utility-item hide-mobile">
               <Truck size={13} className="text-frost" />
