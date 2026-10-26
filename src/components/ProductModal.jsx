@@ -205,7 +205,7 @@ export default function ProductModal({ product, onClose, onNotify }) {
 
               <button 
                 onClick={handleAddToCart}
-                className="btn-ecommerce-primary modal-cart-action-btn"
+                className="btn-primary modal-cart-action-btn"
               >
                 <ShoppingCart size={18} />
                 <span>Ajouter au Panier • {calculatedTotal.toLocaleString()} DZD</span>
@@ -216,7 +216,7 @@ export default function ProductModal({ product, onClose, onNotify }) {
                 className={`modal-wishlist-btn ${isFavorite ? 'active' : ''}`}
                 title="Ajouter à mes favoris"
               >
-                <Heart size={20} className={isFavorite ? "fill-red text-red" : ""} />
+                <Heart size={20} className={isFavorite ? "fill-royal text-royal" : ""} />
               </button>
             </div>
           </div>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b2cc1" />
+      <stop offset="100%" stop-color="#7692ff" />
+    </linearGradient>
+    <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#abd2fa" />
+      <stop offset="100%" stop-color="#1b2cc1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ice Crystal Berry Icon -->
+  <g transform="translate(6, 6)">
+    <!-- Base geometric berry container -->
+    <rect x="0" y="0" width="48" height="48" rx="14" fill="#091540" />
+    
+    <!-- Stylized Frozen Fruit / Strawberry crystal facets -->
+    <path d="M24 10 L35 19 L31 35 L24 40 L17 35 L13 19 Z" fill="url(#logoGrad)" />
+    <!-- Facet highlights -->
+    <path d="M24 10 L24 40 L31 35 L35 19 Z" fill="#1b2cc1" opacity="0.6" />
+    <path d="M24 10 L13 19 L24 23 Z" fill="#abd2fa" opacity="0.8" />
+    <path d="M24 10 L35 19 L24 23 Z" fill="#ffffff" opacity="0.4" />
+    
+    <!-- Frost Sparkle / Snowflake top right -->
+    <path d="M38 7 L40 11 L44 13 L40 15 L38 19 L36 15 L32 13 L36 11 Z" fill="#abd2fa" />
+    <circle cx="38" cy="13" r="1.5" fill="#ffffff" />
+  </g>
+
+  <!-- Brand Typography -->
+  <text x="64" y="36" font-family="'Outfit', 'Inter', system-ui, sans-serif" font-size="28" font-weight="900" letter-spacing="-0.5" fill="#091540">
+    FRUICO<tspan fill="#1b2cc1">.DZ</tspan>
+  </text>
+  
+  <!-- Subtext Tagline -->
+  <text x="65" y="49" font-family="'Inter', system-ui, sans-serif" font-size="8.5" font-weight="700" letter-spacing="1.8" fill="#7692ff">
+    FRUITS SURGELÉS • -18°C
+  </text>
+</svg>

@@ -1,82 +1,52 @@
 /* ==========================================================================
-   FRUICO - DESIGN SYSTEM E-COMMERCE ALIMENTAIRE
-   Style authentique supermarché & boutique de produits surgelés (-18°C)
+   FRUICO - DESIGN SYSTEM
+   Palette Officielle Color Hunt: #091540 | #1b2cc1 | #7692ff | #abd2fa
+   Thème Unique & 100% Responsive
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
 
 :root {
-  /* Palette E-Commerce Professionnelle (Light Mode) */
-  --bg-page: #f4f6f8;
-  --bg-surface: #ffffff;
-  --bg-subtle: #f8fafc;
-  --bg-muted: #eef2f6;
+  /* Les 4 Couleurs de la Palette Officielle */
+  --c-midnight: #091540;   /* Couleur 1: Fond sombre, textes forts, footer */
+  --c-royal: #1b2cc1;      /* Couleur 2: Couleur d'action principale, boutons, badges */
+  --c-frost: #7692ff;      /* Couleur 3: Accents, icônes, bordures actives */
+  --c-ice: #abd2fa;        /* Couleur 4: Badges clairs, surbrillances, piliers */
 
-  --text-main: #1e293b;
-  --text-heading: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
+  /* Déclinaisons douces & Neutres */
+  --c-ice-light: #eaf3fd;
+  --c-ice-ultra: #f4f8fe;
+  --c-white: #ffffff;
+  --c-text-dark: #091540;
+  --c-text-body: #243358;
+  --c-text-muted: #5e729a;
+  --c-text-light: #8ea3cc;
+  --c-border: #d4e5f9;
+  --c-border-hover: #abd2fa;
 
-  --border-subtle: #e2e8f0;
-  --border-main: #cbd5e1;
+  --c-stock-green: #10b981;
+  --c-stock-green-light: #d1fae5;
+  --c-heart-red: #ef4444;
 
-  /* Couleurs de marque : Bleu Glacier Retail & Rouge Remise */
-  --brand-primary: #0284c7;       /* Bleu Océan Frais */
-  --brand-primary-hover: #0369a1;
-  --brand-dark: #0f2744;          /* Bleu Marine Retail */
-  --brand-accent: #e11d48;        /* Rouge Vente / Promo */
-  --brand-accent-hover: #be123c;
-  --brand-cyan: #06b6d4;          /* Cyan Froid -18°C */
-  
-  --status-green: #16a34a;        /* En stock */
-  --status-green-light: #dcfce7;
-  --status-amber: #d97706;
-  --status-amber-light: #fef3c7;
-  --status-red-light: #ffe4e6;
+  /* Typographie & Formes */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
 
   --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-hover: 0 10px 20px -5px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-dropdown: 0 12px 28px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 3px rgba(9, 21, 64, 0.06);
+  --shadow-card: 0 2px 8px rgba(9, 21, 64, 0.08);
+  --shadow-hover: 0 12px 24px -4px rgba(9, 21, 64, 0.14);
+  --shadow-modal: 0 20px 40px rgba(9, 21, 64, 0.25);
 
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-brand: 'Outfit', 'Inter', sans-serif;
-
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s ease;
+  --transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Palette Sombre (Dark Mode) */
-.dark {
-  --bg-page: #0b1120;
-  --bg-surface: #151f32;
-  --bg-subtle: #1e293b;
-  --bg-muted: #27354a;
-
-  --text-main: #f1f5f9;
-  --text-heading: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
-
-  --border-subtle: #27354a;
-  --border-main: #334155;
-
-  --status-green-light: rgba(22, 163, 74, 0.2);
-  --status-red-light: rgba(225, 29, 72, 0.2);
-  --status-amber-light: rgba(217, 119, 6, 0.2);
-
-  --shadow-card: 0 2px 5px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.6);
-}
-
-/* Reset de base */
+/* Reset Global & Responsive Box Model */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -86,15 +56,18 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--font-body);
-  background-color: var(--bg-page);
-  color: var(--text-main);
+  font-family: var(--font-main);
+  background-color: var(--c-ice-ultra);
+  color: var(--c-text-body);
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 #root {
@@ -103,20 +76,35 @@ body {
   flex-direction: column;
 }
 
-/* Conteneur fluide e-commerce */
+/* Conteneur Responsif Fluide */
 .container {
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-/* Typographie standard */
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Typographie */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-brand);
-  color: var(--text-heading);
+  font-family: var(--font-display);
+  color: var(--c-midnight);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 a {
@@ -129,76 +117,82 @@ button {
   border: none;
   background: none;
   font-family: inherit;
-  transition: all var(--transition-fast);
+  font-size: inherit;
+  color: inherit;
+  transition: all var(--transition);
+  touch-action: manipulation;
 }
 
 input, select, textarea {
   font-family: inherit;
+  font-size: 1rem;
   color: inherit;
 }
 
-/* Boutons E-Commerce */
-.btn-ecommerce-primary {
+/* Style de Boutons Principaux selon la palette */
+.btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: var(--brand-accent);
+  background: var(--c-royal);
   color: #ffffff;
   font-weight: 700;
-  font-size: 0.95rem;
   padding: 0.75rem 1.4rem;
   border-radius: var(--radius-sm);
-  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
-  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(27, 44, 193, 0.25);
+  transition: all var(--transition);
 }
 
-.btn-ecommerce-primary:hover {
-  background: var(--brand-accent-hover);
+.btn-primary:hover {
+  background: var(--c-midnight);
+  box-shadow: 0 6px 16px rgba(9, 21, 64, 0.3);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
 }
 
-.btn-ecommerce-secondary {
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: var(--bg-surface);
-  color: var(--text-heading);
+  background: var(--c-ice-light);
+  color: var(--c-midnight);
   font-weight: 700;
-  font-size: 0.95rem;
   padding: 0.75rem 1.25rem;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-main);
-  box-shadow: var(--shadow-card);
+  border: 1px solid var(--c-ice);
+  transition: all var(--transition);
 }
 
-.btn-ecommerce-secondary:hover {
-  background: var(--bg-muted);
-  border-color: var(--text-muted);
+.btn-secondary:hover {
+  background: var(--c-ice);
+  color: var(--c-royal);
 }
 
 /* Modales & Tiroirs */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(9, 21, 64, 0.7);
   backdrop-filter: blur(4px);
-  z-index: 1050;
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 1rem;
   animation: fadeIn 0.2s ease-out;
 }
 
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(9, 21, 64, 0.65);
   backdrop-filter: blur(3px);
-  z-index: 1050;
+  z-index: 1200;
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -217,21 +211,21 @@ input, select, textarea {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Scrollbars sobres */
+/* Scrollbar Stylisée Palette */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-subtle);
+  background: var(--c-ice-ultra);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-main);
+  background: var(--c-ice);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--c-frost);
 }

@@ -4,39 +4,39 @@ import { Snowflake, Truck, ShieldCheck, HeartPulse } from 'lucide-react';
 export default function FeaturesBar() {
   const features = [
     {
-      icon: <Snowflake className="retail-trust-icon text-cyan" size={24} />,
+      icon: <Snowflake size={22} className="text-royal" />,
       title: "Chaîne du froid -18°C",
-      desc: "Emballages isothermes certifiés avec blocs de froid négatif."
+      desc: "Emballage isotherme certifié et glace carbonique."
     },
     {
-      icon: <Truck className="retail-trust-icon text-accent" size={24} />,
+      icon: <Truck size={22} className="text-frost" />,
       title: "Livraison 58 Wilayas",
       desc: "Expédition frigorifique rapide. Gratuite dès 5 000 DZD."
     },
     {
-      icon: <HeartPulse className="retail-trust-icon text-red" size={24} />,
-      title: "100% Fruits Purs & IQF",
-      desc: "Surgélation unitaire, aucun fruit collé en bloc, zéro sucre ajouté."
+      icon: <HeartPulse size={22} className="text-royal" />,
+      title: "100% Fruits Purs IQF",
+      desc: "Surgélation unitaire, zéro sucre ajouté ni additif."
     },
     {
-      icon: <ShieldCheck className="retail-trust-icon text-emerald" size={24} />,
-      title: "Paiement à la Réception",
-      desc: "Réglez en toute sécurité en espèces lors de la livraison."
+      icon: <ShieldCheck size={22} className="text-frost" />,
+      title: "Paiement à la Livraison",
+      desc: "Réglez en toute sécurité en espèces à réception."
     }
   ];
 
   return (
-    <section className="retail-trust-bar">
+    <section className="features-trust-strip">
       <div className="container">
-        <div className="trust-items-grid">
+        <div className="trust-grid-responsive">
           {features.map((item, idx) => (
-            <div key={idx} className="trust-item-box">
-              <div className="trust-icon-box">
+            <div key={idx} className="trust-card-item">
+              <div className="trust-icon-circle">
                 {item.icon}
               </div>
-              <div className="trust-text-box">
-                <h4 className="trust-title">{item.title}</h4>
-                <p className="trust-desc">{item.desc}</p>
+              <div className="trust-info-block">
+                <h4 className="trust-heading">{item.title}</h4>
+                <p className="trust-subtext">{item.desc}</p>
               </div>
             </div>
           ))}

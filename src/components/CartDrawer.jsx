@@ -109,7 +109,7 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
               <p className="empty-cart-text">
                 Remplissez votre congélateur de fruits savoureux pour vos smoothies, glaces et desserts !
               </p>
-              <button onClick={onClose} className="btn-ecommerce-primary mt-4">
+              <button onClick={onClose} className="btn-primary mt-4">
                 Découvrir nos fruits surgelés
               </button>
             </div>
@@ -255,7 +255,7 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
                   onClose();
                   onProceedToCheckout();
                 }}
-                className="btn-ecommerce-primary btn-block checkout-btn-pulse"
+                className="btn-primary btn-block checkout-btn-pulse"
               >
                 <span>Commander ({grandTotal.toLocaleString()} DZD)</span>
                 <ArrowRight size={18} />

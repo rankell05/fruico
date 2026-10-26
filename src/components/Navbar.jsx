@@ -1,34 +1,30 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
-  Snowflake, 
   ShoppingCart, 
   Heart, 
-  Sun, 
-  Moon, 
   Search, 
   X, 
   Menu,
   Phone,
   Truck,
-  ShieldCheck,
+  Snowflake,
   ChevronDown,
   Layers,
-  Sparkles,
   Tag
 } from 'lucide-react';
-import { toggleTheme } from '../redux/themeSlice';
+import Logo from './Logo';
 import { setSearchQuery, setCategory, toggleDiscounted } from '../redux/filterSlice';
 import { CATEGORIES } from '../data/products';
 
 export default function Navbar({ onOpenCart, onOpenFavorites }) {
   const dispatch = useDispatch();
-  const darkMode = useSelector(state => state.theme.darkMode);
   const cartItems = useSelector(state => state.cart.items);
   const favoriteIds = useSelector(state => state.favorites.items);
   const { searchQuery, category, onlyDiscounted } = useSelector(state => state.filters);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [selectedCatInSearch, setSelectedCatInSearch] = useState('all');
 
   const totalCartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -47,29 +43,25 @@ export default function Navbar({ onOpenCart, onOpenFavorites }) {
 
   return (
     <header className="site-header">
-      {/* 1. TOP UTILITY BAR (E-COMMERCE SERVICE & INFO) */}
+      {/* 1. TOP UTILITY BAR (NAVY #091540) */}
       <div className="top-utility-bar">
         <div className="container utility-flex">
           <div className="utility-left">
             <div className="utility-item">
-              <Phone size={13} className="text-accent" />
-              <span>Service Client : <strong>0550 12 34 56</strong> (8h - 19h)</span>
+              <Phone size={13} className="text-ice" />
+              <span>Service Client : <strong>0550 12 34 56</strong></span>
             </div>
             <div className="utility-item hide-mobile">
-              <Truck size={13} className="text-accent" />
+              <Truck size={13} className="text-frost" />
               <span>Livraison frigorifique <strong>58 Wilayas</strong></span>
             </div>
             <div className="utility-item hide-tablet">
-              <Snowflake size={13} className="text-cyan" />
-              <span>Chaîne du froid <strong>-18°C garantie</strong></span>
+              <Snowflake size={13} className="text-ice" />
+              <span>Chaîne du froid <strong>-18°C certifiée</strong></span>
             </div>
           </div>
 
           <div className="utility-right">
-            <div className="utility-item hide-mobile">
-              <ShieldCheck size={13} className="text-emerald" />
-              <span>Paiement en espèces à la livraison (COD)</span>
-            </div>
             <div className="utility-currency-pill">
               <span>🇩🇿 DZD (Dinar Algérien)</span>
             </div>
@@ -77,34 +69,29 @@ export default function Navbar({ onOpenCart, onOpenFavorites }) {
         </div>
       </div>
 
-      {/* 2. MAIN HEADER BAR (LOGO, SEARCH, ACCOUNT, CART) */}
+      {/* 2. MAIN HEADER (LOGO, SEARCH, ACTIONS) */}
       <div className="main-header-bar">
         <div className="container header-flex">
-          {/* Logo Fruico */}
+          {/* Logo Officiel Fruico */}
           <a 
             href="#" 
-            className="brand-logo" 
+            className="brand-logo-link" 
             onClick={() => { dispatch(setCategory('all')); dispatch(setSearchQuery('')); }}
+            aria-label="Accueil Fruico"
           >
-            <div className="logo-badge">
-              <Snowflake size={24} className="logo-frost" />
-            </div>
-            <div className="logo-text">
-              <span className="brand-title">FRUICO<span className="brand-accent">.DZ</span></span>
-              <span className="brand-subtitle">Marché des Fruits Surgelés</span>
-            </div>
+            <Logo />
           </a>
 
-          {/* E-Commerce Search Bar with Category Dropdown */}
-          <form className="ecommerce-search-form" onSubmit={handleSearchSubmit}>
-            <div className="search-category-select-wrapper hide-mobile">
+          {/* Desktop Search Bar */}
+          <form className="desktop-search-form hide-mobile" onSubmit={handleSearchSubmit}>
+            <div className="search-category-dropdown">
               <select 
                 value={selectedCatInSearch}
                 onChange={(e) => {
                   setSelectedCatInSearch(e.target.value);
                   dispatch(setCategory(e.target.value));
                 }}
-                className="search-category-select"
+                className="search-cat-select"
               >
                 <option value="all">Tous les rayons</option>
                 <option value="fruits-rouges">Fruits Rouges</option>
@@ -112,16 +99,16 @@ export default function Navbar({ onOpenCart, onOpenFavorites }) {
                 <option value="verger-algerien">Verger Algérien</option>
                 <option value="smoothies-mix">Smoothies & Mix</option>
               </select>
-              <ChevronDown size={14} className="select-arrow-icon" />
+              <ChevronDown size={14} className="cat-arrow" />
             </div>
 
-            <div className="search-input-field-wrapper">
+            <div className="search-input-box">
               <input
                 type="text"
                 placeholder="Rechercher fraises, mangue, myrtilles, cerises, mix..."
                 value={searchQuery}
                 onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-                className="ecommerce-search-input"
+                className="search-input"
               />
               {searchQuery && (
                 <button 
@@ -135,131 +122,157 @@ export default function Navbar({ onOpenCart, onOpenFavorites }) {
               )}
             </div>
 
-            <button type="submit" className="ecommerce-search-btn" title="Lancer la recherche">
+            <button type="submit" className="search-submit-btn" aria-label="Rechercher">
               <Search size={18} />
-              <span className="hide-mobile">Rechercher</span>
+              <span>Rechercher</span>
             </button>
           </form>
 
-          {/* Right Action Icons (Dark mode, Favorites, Cart) */}
-          <div className="header-actions-group">
-            {/* Theme Toggle Button */}
+          {/* Actions : Recherche Mobile, Favoris, Panier, Menu */}
+          <div className="header-actions-flex">
+            {/* Mobile search toggle */}
             <button
-              onClick={() => dispatch(toggleTheme())}
-              className="header-icon-btn"
-              title={darkMode ? "Passer au mode clair" : "Passer au mode sombre"}
-              aria-label="Mode sombre/clair"
+              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+              className="action-icon-btn hide-desktop"
+              aria-label="Recherche"
+              title="Rechercher"
             >
-              {darkMode ? <Sun size={20} className="text-amber" /> : <Moon size={20} />}
+              {mobileSearchOpen ? <X size={20} /> : <Search size={20} />}
             </button>
 
-            {/* Wishlist Button */}
+            {/* Favoris (Wishlist) */}
             <button
               onClick={onOpenFavorites}
-              className="header-icon-btn"
+              className="action-icon-btn"
               title="Mes fruits favoris"
               aria-label="Favoris"
             >
-              <Heart size={21} className={favoriteIds.length > 0 ? "fill-red text-red" : ""} />
+              <Heart size={21} className={favoriteIds.length > 0 ? "fill-royal text-royal" : ""} />
               {favoriteIds.length > 0 && (
-                <span className="icon-badge badge-fav">{favoriteIds.length}</span>
+                <span className="badge-count badge-fav">{favoriteIds.length}</span>
               )}
             </button>
 
-            {/* Cart Button (E-Commerce style) */}
+            {/* Bouton Panier E-Commerce */}
             <button
               onClick={onOpenCart}
-              className="ecommerce-cart-btn"
+              className="cart-pill-btn"
               title="Consulter mon panier"
               aria-label="Panier d'achats"
             >
-              <div className="cart-icon-container">
-                <ShoppingCart size={22} />
+              <div className="cart-icon-box">
+                <ShoppingCart size={20} />
                 {totalCartCount > 0 && (
-                  <span className="icon-badge badge-cart-count">{totalCartCount}</span>
+                  <span className="badge-count badge-cart">{totalCartCount}</span>
                 )}
               </div>
-              <div className="cart-info-text hide-mobile">
-                <span className="cart-small-label">Mon Panier</span>
-                <span className="cart-amount-label">
+              <div className="cart-pill-text hide-mobile">
+                <span className="cart-pill-label">Mon Panier</span>
+                <span className="cart-pill-total">
                   {totalCartPrice.toLocaleString()} <small>DZD</small>
                 </span>
               </div>
             </button>
 
-            {/* Mobile menu hamburger */}
+            {/* Bouton Menu Mobile (Hamburger) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="header-icon-btn hide-desktop"
-              aria-label="Menu"
+              className="action-icon-btn hide-desktop"
+              aria-label="Menu des rayons"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
+
+        {/* Mobile Search Input Drawer (Visible when tapped on mobile) */}
+        {mobileSearchOpen && (
+          <div className="mobile-search-expand hide-desktop">
+            <div className="container">
+              <div className="mobile-search-box">
+                <Search size={17} className="text-muted" />
+                <input
+                  type="text"
+                  placeholder="Rechercher un fruit (ex: fraises, mangue...)"
+                  value={searchQuery}
+                  onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+                  autoFocus
+                />
+                {searchQuery && (
+                  <button onClick={handleClearSearch} className="mobile-clear-btn">
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 3. CATEGORIES NAVIGATION BAR (RAYONS DU SUPERMARCHÉ) */}
-      <div className="categories-navbar hide-mobile">
-        <div className="container nav-links-flex">
-          <div className="rayons-dropdown-btn" onClick={() => dispatch(setCategory('all'))}>
-            <Layers size={17} />
-            <span>Tous nos Rayons ({CATEGORIES[0].count})</span>
-          </div>
+      {/* 3. HORIZONTAL CATEGORIES BAR (SWIPEABLE TOUCH SCROLL) */}
+      <nav className="rayons-navbar">
+        <div className="container rayons-flex">
+          <button 
+            className={`rayon-tab all-rayons-tab ${category === 'all' && !onlyDiscounted ? 'active' : ''}`}
+            onClick={() => dispatch(setCategory('all'))}
+          >
+            <Layers size={16} />
+            <span>Tous les Rayons</span>
+          </button>
 
-          <div className="horizontal-rayons-list">
+          <div className="swipeable-rayons-track">
             <button 
-              className={`rayon-link ${category === 'fruits-rouges' ? 'active' : ''}`}
+              className={`rayon-tab ${category === 'fruits-rouges' ? 'active' : ''}`}
               onClick={() => dispatch(setCategory('fruits-rouges'))}
             >
-              🍓 Fruits Rouges & Baies
+              🍓 Fruits Rouges
             </button>
             <button 
-              className={`rayon-link ${category === 'tropicaux' ? 'active' : ''}`}
+              className={`rayon-tab ${category === 'tropicaux' ? 'active' : ''}`}
               onClick={() => dispatch(setCategory('tropicaux'))}
             >
-              🥭 Fruits Exotiques & Tropicaux
+              🥭 Fruits Exotiques
             </button>
             <button 
-              className={`rayon-link ${category === 'verger-algerien' ? 'active' : ''}`}
+              className={`rayon-tab ${category === 'verger-algerien' ? 'active' : ''}`}
               onClick={() => dispatch(setCategory('verger-algerien'))}
             >
-              🍑 Verger Algérien (Fraises, Pêches, Cerises)
+              🍑 Verger Algérien
             </button>
             <button 
-              className={`rayon-link ${category === 'smoothies-mix' ? 'active' : ''}`}
+              className={`rayon-tab ${category === 'smoothies-mix' ? 'active' : ''}`}
               onClick={() => dispatch(setCategory('smoothies-mix'))}
             >
               🥤 Mix & Smoothies
             </button>
             <button 
-              className={`rayon-link promo-link ${onlyDiscounted ? 'active' : ''}`}
+              className={`rayon-tab promo-tab ${onlyDiscounted ? 'active' : ''}`}
               onClick={() => dispatch(toggleDiscounted())}
             >
               <Tag size={14} />
-              <span>Promotions & Ventes Flash</span>
+              <span>Promotions</span>
             </button>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="mobile-dropdown-menu">
-          <div className="container mobile-dropdown-content">
-            <div className="mobile-categories-list">
-              <span className="mobile-cat-header">Rayons de Surgelés :</span>
+        <div className="mobile-nav-drawer hide-desktop">
+          <div className="container mobile-nav-content">
+            <div className="mobile-rayons-header">Rayons de Surgelés :</div>
+            <div className="mobile-rayons-grid">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat.id}
-                  className={`mobile-cat-item ${category === cat.id ? 'active' : ''}`}
+                  className={`mobile-rayon-item ${category === cat.id ? 'active' : ''}`}
                   onClick={() => {
                     dispatch(setCategory(cat.id));
                     setMobileMenuOpen(false);
                   }}
                 >
                   <span>{cat.label}</span>
-                  <span className="cat-count-badge">{cat.count}</span>
+                  <span className="mobile-cat-badge">{cat.count}</span>
                 </button>
               ))}
             </div>

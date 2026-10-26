@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { X, Heart, ShoppingBag, Trash2, Snowflake } from 'lucide-react';
+import { X, Heart, ShoppingCart, Trash2, Snowflake } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import { toggleFavorite, clearFavorites } from '../redux/favoritesSlice';
 import { addToCart } from '../redux/cartSlice';
@@ -34,7 +34,7 @@ export default function FavoritesModal({ isOpen, onClose, onNotify }) {
         {/* En-tête */}
         <div className="favorites-header">
           <div className="favorites-title-box">
-            <Heart size={22} className="text-red fill-red" />
+            <Heart size={22} className="text-royal fill-royal" />
             <h2 className="favorites-title">Mes Fruits Coup de Cœur</h2>
             <span className="favorites-counter-badge">
               {favoriteProducts.length} favori{favoriteProducts.length > 1 ? 's' : ''}
@@ -79,7 +79,7 @@ export default function FavoritesModal({ isOpen, onClose, onNotify }) {
                       className="btn btn-primary btn-sm"
                       title="Ajouter au panier"
                     >
-                      <ShoppingBag size={15} />
+                      <ShoppingCart size={15} />
                       <span>Ajouter</span>
                     </button>
 

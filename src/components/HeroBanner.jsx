@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Snowflake, Truck, ShieldCheck, Tag, ArrowRight, Sparkles } from 'lucide-react';
+import { Snowflake, Truck, Tag, ArrowRight, Sparkles } from 'lucide-react';
 import { setCategory, toggleDiscounted } from '../redux/filterSlice';
 
 export default function HeroBanner() {
@@ -17,93 +17,86 @@ export default function HeroBanner() {
   };
 
   return (
-    <section className="ecommerce-hero-section">
-      <div className="container hero-grid-wrapper">
-        {/* Main Large Promotional Banner (Style Picard / Carrefour) */}
-        <div className="main-promo-banner">
-          <div className="banner-content">
-            <div className="banner-badge">
-              <Sparkles size={14} className="text-amber" />
-              <span>ARRIVAGE DU MOIS • QUALITÉ IQF -18°C</span>
+    <section className="hero-retail-section">
+      <div className="container hero-layout-flex">
+        {/* Grande Bannière Principale */}
+        <div className="hero-main-card">
+          <div className="hero-text-block">
+            <div className="hero-frost-chip">
+              <Sparkles size={14} className="text-ice" />
+              <span>Surgélation IQF Instantanée à -18°C</span>
             </div>
 
-            <h1 className="banner-headline">
+            <h1 className="hero-headline">
               Le Marché des Fruits Surgelés <br />
-              <span className="banner-subheadline">100% Naturels, Cueillis à Maturité</span>
+              <span className="hero-subline">100% Naturels, Cueillis à Maturité</span>
             </h1>
 
-            <p className="banner-description">
-              Fraises gorgées de soleil de la Mitidja, mangues fondantes, framboises entières et myrtilles sauvages. Surgélation rapide pour préserver toutes les saveurs et vitamines sans aucun sucre ajouté.
+            <p className="hero-paragraph">
+              Fraises de la Mitidja, mangues fondantes, framboises et myrtilles sauvages. Surgélation rapide préservant toutes les vitamines sans aucun sucre ajouté.
             </p>
 
-            <div className="banner-advantages-list">
-              <div className="advantage-pill">
-                <Snowflake size={14} className="text-cyan" />
+            <div className="hero-guarantees-row">
+              <div className="guarantee-item">
+                <Snowflake size={15} className="text-ice" />
                 <span>Chaîne du froid certifiée (-18°C)</span>
               </div>
-              <div className="advantage-pill">
-                <Truck size={14} className="text-accent" />
+              <div className="guarantee-item">
+                <Truck size={15} className="text-frost" />
                 <span>Livraison 58 Wilayas (Gratuite dès 5 000 DZD)</span>
               </div>
             </div>
 
-            <div className="banner-cta-group">
-              <button onClick={scrollToCatalog} className="btn-ecommerce-primary">
+            <div className="hero-cta-flex">
+              <button onClick={scrollToCatalog} className="btn-hero-primary">
                 <span>Découvrir le Catalogue</span>
                 <ArrowRight size={17} />
               </button>
-              <button onClick={handleShowPromos} className="btn-ecommerce-secondary">
+              <button onClick={handleShowPromos} className="btn-hero-secondary">
                 <Tag size={16} />
-                <span>Voir les Promotions (-15%)</span>
+                <span>Promotions du Mois (-15%)</span>
               </button>
             </div>
           </div>
 
-          <div className="banner-media-area">
+          <div className="hero-image-block">
             <img 
               src="/images/products/fraises.jpg" 
-              alt="Fraises surgelées Fruico" 
-              className="banner-product-image"
+              alt="Fraises surgelées de la Mitidja" 
+              className="hero-fruit-img"
             />
-            <div className="banner-price-tag-overlay">
-              <span className="price-tag-title">Fraises de Mitidja 1kg</span>
-              <span className="price-tag-amount">680 DZD <small className="price-tag-old">800 DZD</small></span>
-              <span className="price-tag-badge">Économisez 15%</span>
+            <div className="hero-price-badge">
+              <span className="badge-prod-title">Fraises de Mitidja 1kg</span>
+              <span className="badge-prod-price">680 DZD <small>800 DZD</small></span>
+              <span className="badge-prod-save">Remise immédiate -15%</span>
             </div>
           </div>
         </div>
 
-        {/* Side Commercial Promotional Cards (Retail Style) */}
-        <div className="side-promo-column">
-          {/* Side Card 1: Mix Smoothie */}
+        {/* Colonne Promos Secondaires (Desktop & Tablette) */}
+        <div className="hero-side-column hide-mobile">
           <div 
-            className="side-promo-card side-card-smoothie"
+            className="side-banner-card card-smoothie"
             onClick={() => { dispatch(setCategory('smoothies-mix')); scrollToCatalog(); }}
           >
-            <div className="side-card-content">
-              <span className="side-card-badge">PACK FAMILIAL</span>
-              <h3 className="side-card-title">Mix Smoothies & Bowls</h3>
-              <p className="side-card-desc">Portions individuelles prêtes à mixer en 30 secondes</p>
-              <span className="side-card-price">Dès 1 290 DZD</span>
+            <div className="side-banner-text">
+              <span className="side-pill">PACK FAMILIAL</span>
+              <h3 className="side-banner-title">Mix Smoothies & Bowls</h3>
+              <p className="side-banner-desc">4 portions de 250g prêtes à mixer</p>
+              <span className="side-banner-price">Dès 1 290 DZD</span>
             </div>
-            <img 
-              src="/images/products/fruits-mix.jpg" 
-              alt="Mix fruits surgelés" 
-              className="side-card-img"
-            />
+            <img src="/images/products/fruits-mix.jpg" alt="Mix fruits" className="side-banner-img" />
           </div>
 
-          {/* Side Card 2: Chaîne du Froid Certifiée */}
-          <div className="side-promo-card side-card-cold">
-            <div className="side-card-content">
-              <div className="cold-icon-circle">
-                <Snowflake size={24} className="text-cyan" />
+          <div className="side-banner-card card-cold">
+            <div className="side-banner-text">
+              <div className="cold-frost-icon">
+                <Snowflake size={22} className="text-royal" />
               </div>
-              <h3 className="side-card-title">Garantie Froid -18°C</h3>
-              <p className="side-card-desc">
-                Emballage isotherme avec glace carbonique. Zéro décongélation pendant le transport jusqu'à votre domicile.
+              <h3 className="side-banner-title">Garantie Froid -18°C</h3>
+              <p className="side-banner-desc">
+                Caissons isothermes avec glace carbonique jusqu'à votre congélateur.
               </p>
-              <span className="cold-status-text">Contrôle thermomètre à réception</span>
             </div>
           </div>
         </div>

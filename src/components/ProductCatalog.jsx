@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { PRODUCTS, CATEGORIES, PACKAGING_OPTIONS, ORIGIN_OPTIONS } from '../data/products';
 import ProductCard from './ProductCard';
@@ -15,17 +15,13 @@ import {
   setSearchQuery
 } from '../redux/filterSlice';
 import { 
-  SlidersHorizontal, 
+  Filter, 
   ArrowUpDown, 
   RotateCcw, 
-  Check, 
-  Package, 
-  MapPin, 
-  Frown, 
-  Tag, 
-  Sparkles,
-  Snowflake,
-  Filter
+  X, 
+  SlidersHorizontal,
+  Frown,
+  Check
 } from 'lucide-react';
 
 export default function ProductCatalog({ onQuickView, onNotify }) {
@@ -42,13 +38,14 @@ export default function ProductCatalog({ onQuickView, onNotify }) {
     onlyInStock 
   } = useSelector(state => state.filters);
 
-  // Filtrage des produits selon tous les critères e-commerce
+  // État local pour le tiroir de filtres sur mobile/tablette
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+  // Filtrage des produits selon tous les critères
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter(item => {
-      // 1. Rayon / Catégorie
       if (category !== 'all' && item.category !== category) return false;
 
-      // 2. Recherche par mot-clé
       if (searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = item.name.toLowerCase().includes(q);
@@ -58,23 +55,12 @@ export default function ProductCatalog({ onQuickView, onNotify }) {
         if (!matchesName && !matchesCategory && !matchesOrigin && !matchesDesc) return false;
       }
 
-      // 3. Prix maximal en DZD
       if (item.price > maxPrice) return false;
-
-      // 4. Conditionnement (500g ou 1kg)
       if (packaging !== 'all' && item.packaging !== packaging) return false;
-
-      // 5. Origine (Algérie ou Import)
       if (origin === 'dz' && !item.isAlgerian) return false;
       if (origin === 'import' && item.isAlgerian) return false;
-
-      // 6. Bio uniquement
       if (onlyOrganic && !item.isOrganic) return false;
-
-      // 7. En promotion uniquement
       if (onlyDiscounted && item.discountPercent <= 0) return false;
-
-      // 8. En stock uniquement
       if (onlyInStock && !item.inStock) return false;
 
       return true;
@@ -83,241 +69,299 @@ export default function ProductCatalog({ onQuickView, onNotify }) {
       if (sortBy === 'price-desc') return b.price - a.price;
       if (sortBy === 'rating') return b.rating - a.rating;
       if (sortBy === 'name') return a.name.localeCompare(b.name);
-      return 0; // 'featured'
+      return 0;
     });
   }, [category, searchQuery, sortBy, maxPrice, packaging, origin, onlyOrganic, onlyDiscounted, onlyInStock]);
 
   const activeCategoryObj = CATEGORIES.find(c => c.id === category) || CATEGORIES[0];
 
-  const hasActiveFilters = category !== 'all' || 
-    searchQuery !== '' || 
-    sortBy !== 'featured' || 
-    maxPrice < 3000 || 
-    packaging !== 'all' || 
-    origin !== 'all' || 
-    onlyOrganic || 
-    onlyDiscounted || 
-    onlyInStock;
+  const activeFiltersCount = 
+    (category !== 'all' ? 1 : 0) + 
+    (packaging !== 'all' ? 1 : 0) + 
+    (origin !== 'all' ? 1 : 0) + 
+    (maxPrice < 3000 ? 1 : 0) + 
+    (onlyOrganic ? 1 : 0) + 
+    (onlyDiscounted ? 1 : 0) + 
+    (onlyInStock ? 1 : 0) +
+    (searchQuery ? 1 : 0);
+
+  // Composant contenu des filtres (réutilisé pour Desktop et tiroir Mobile)
+  const FilterContent = () => (
+    <>
+      <div className="sidebar-filter-header">
+        <div className="sidebar-header-left">
+          <SlidersHorizontal size={18} className="text-royal" />
+          <h3 className="sidebar-heading-text">Filtres du Marché</h3>
+        </div>
+        {activeFiltersCount > 0 && (
+          <button 
+            onClick={() => dispatch(resetFilters())} 
+            className="sidebar-clear-all-btn"
+            title="Effacer tous les filtres"
+          >
+            <RotateCcw size={12} />
+            <span>Effacer</span>
+          </button>
+        )}
+      </div>
+
+      {/* 1. Rayons */}
+      <div className="filter-group-section">
+        <h4 className="filter-section-title">Rayons</h4>
+        <ul className="categories-list-vertical">
+          {CATEGORIES.map(cat => (
+            <li key={cat.id}>
+              <button
+                className={`category-item-btn ${category === cat.id ? 'active' : ''}`}
+                onClick={() => {
+                  dispatch(setCategory(cat.id));
+                  if (mobileFilterOpen) setMobileFilterOpen(false);
+                }}
+              >
+                <span className="cat-label">{cat.label}</span>
+                <span className="cat-count">({cat.count})</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 2. Budget Maximum */}
+      <div className="filter-group-section">
+        <div className="filter-title-with-val">
+          <h4 className="filter-section-title">Budget Maximum</h4>
+          <span className="budget-val-badge">{maxPrice.toLocaleString()} DZD</span>
+        </div>
+        <input
+          type="range"
+          min="600"
+          max="3000"
+          step="50"
+          value={maxPrice}
+          onChange={(e) => dispatch(setMaxPrice(Number(e.target.value)))}
+          className="fruico-slider"
+        />
+        <div className="slider-limits-row">
+          <span>600 DZD</span>
+          <span>3 000 DZD</span>
+        </div>
+      </div>
+
+      {/* 3. Format / Conditionnement */}
+      <div className="filter-group-section">
+        <h4 className="filter-section-title">Format du Sachet</h4>
+        <div className="filter-radios-col">
+          {PACKAGING_OPTIONS.map(pkg => (
+            <label key={pkg.id} className="filter-choice-label">
+              <input
+                type="radio"
+                name="packaging"
+                value={pkg.id}
+                checked={packaging === pkg.id}
+                onChange={() => dispatch(setPackaging(pkg.id))}
+              />
+              <span>{pkg.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Origine */}
+      <div className="filter-group-section">
+        <h4 className="filter-section-title">Provenance</h4>
+        <div className="filter-radios-col">
+          {ORIGIN_OPTIONS.map(orig => (
+            <label key={orig.id} className="filter-choice-label">
+              <input
+                type="radio"
+                name="origin"
+                value={orig.id}
+                checked={origin === orig.id}
+                onChange={() => dispatch(setOrigin(orig.id))}
+              />
+              <span>{orig.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Critères Spéciaux */}
+      <div className="filter-group-section">
+        <h4 className="filter-section-title">Sélection</h4>
+        <div className="filter-checkboxes-col">
+          <label className="filter-choice-label">
+            <input
+              type="checkbox"
+              checked={onlyDiscounted}
+              onChange={() => dispatch(toggleDiscounted())}
+            />
+            <span>Promotions du mois</span>
+          </label>
+
+          <label className="filter-choice-label">
+            <input
+              type="checkbox"
+              checked={onlyOrganic}
+              onChange={() => dispatch(toggleOrganic())}
+            />
+            <span>100% Bio & Naturel</span>
+          </label>
+
+          <label className="filter-choice-label">
+            <input
+              type="checkbox"
+              checked={onlyInStock}
+              onChange={() => dispatch(toggleInStock())}
+            />
+            <span>En stock immédiat</span>
+          </label>
+        </div>
+      </div>
+    </>
+  );
 
   return (
-    <section className="catalog-ecommerce-section" id="catalogue-section">
+    <section className="catalog-main-section" id="catalogue-section">
       <div className="container">
-        {/* Barre de navigation fil d'Ariane (Breadcrumb) */}
-        <div className="ecommerce-breadcrumb">
+        {/* Fil d'Ariane */}
+        <div className="fruico-breadcrumb">
           <a href="#" onClick={() => dispatch(resetFilters())}>Accueil</a>
-          <span className="breadcrumb-separator">/</span>
-          <span>Marché Surgelés</span>
-          <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-current">{activeCategoryObj.label}</span>
+          <span className="breadcrumb-dot">/</span>
+          <span>Fruits Surgelés</span>
+          <span className="breadcrumb-dot">/</span>
+          <span className="breadcrumb-active">{activeCategoryObj.label}</span>
           {searchQuery && (
             <>
-              <span className="breadcrumb-separator">/</span>
-              <span className="breadcrumb-query">Recherche : « {searchQuery} »</span>
+              <span className="breadcrumb-dot">/</span>
+              <span className="breadcrumb-search">« {searchQuery} »</span>
             </>
           )}
         </div>
 
-        {/* Layout E-Commerce : Sidebar Filtres à gauche + Grille Produits à droite */}
-        <div className="catalog-layout-grid">
-          {/* ========================================================
-              SIDEBAR FILTRES (RÉELLEMENT E-COMMERCE)
-             ======================================================== */}
-          <aside className="catalog-filters-sidebar">
-            <div className="sidebar-header">
-              <div className="sidebar-title-box">
-                <Filter size={18} className="text-accent" />
-                <h3 className="sidebar-title">Filtrer les Produits</h3>
-              </div>
-              {hasActiveFilters && (
-                <button 
-                  onClick={() => dispatch(resetFilters())} 
-                  className="sidebar-reset-btn"
-                  title="Réinitialiser tous les filtres"
-                >
-                  <RotateCcw size={13} />
-                  <span>Effacer</span>
-                </button>
-              )}
-            </div>
+        {/* Barre de contrôle Mobile : Bouton Filtres & Tri */}
+        <div className="mobile-catalog-actions-bar hide-desktop">
+          <button 
+            onClick={() => setMobileFilterOpen(true)}
+            className="mobile-filter-trigger-btn"
+          >
+            <Filter size={16} />
+            <span>Filtrer les produits</span>
+            {activeFiltersCount > 0 && (
+              <span className="mobile-active-filter-badge">{activeFiltersCount}</span>
+            )}
+          </button>
 
-            {/* 1. Rayons / Catégories */}
-            <div className="sidebar-filter-block">
-              <h4 className="filter-block-title">Rayons de Surgelés</h4>
-              <ul className="sidebar-categories-list">
-                {CATEGORIES.map(cat => (
-                  <li key={cat.id}>
-                    <button
-                      className={`sidebar-cat-btn ${category === cat.id ? 'active' : ''}`}
-                      onClick={() => dispatch(setCategory(cat.id))}
-                    >
-                      <span className="cat-btn-label">{cat.label}</span>
-                      <span className="cat-btn-count">({cat.count})</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="mobile-sort-select-box">
+            <ArrowUpDown size={14} className="text-royal" />
+            <select
+              value={sortBy}
+              onChange={(e) => dispatch(setSortBy(e.target.value))}
+              className="mobile-sort-select"
+            >
+              <option value="featured">Recommandés</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="rating">Mieux notés</option>
+              <option value="name">Nom (A-Z)</option>
+            </select>
+          </div>
+        </div>
 
-            {/* 2. Budget Max (Slider DZD) */}
-            <div className="sidebar-filter-block">
-              <div className="filter-title-row">
-                <h4 className="filter-block-title">Budget Maximum</h4>
-                <span className="price-value-badge">{maxPrice.toLocaleString()} DZD</span>
-              </div>
-              <input
-                type="range"
-                min="600"
-                max="3000"
-                step="50"
-                value={maxPrice}
-                onChange={(e) => dispatch(setMaxPrice(Number(e.target.value)))}
-                className="ecommerce-slider"
-              />
-              <div className="slider-bounds">
-                <span>600 DZD</span>
-                <span>3 000 DZD</span>
-              </div>
-            </div>
-
-            {/* 3. Conditionnement / Poids */}
-            <div className="sidebar-filter-block">
-              <h4 className="filter-block-title">Format du Sachet</h4>
-              <div className="radio-options-list">
-                {PACKAGING_OPTIONS.map(pkg => (
-                  <label key={pkg.id} className="filter-radio-label">
-                    <input
-                      type="radio"
-                      name="packaging"
-                      value={pkg.id}
-                      checked={packaging === pkg.id}
-                      onChange={() => dispatch(setPackaging(pkg.id))}
-                    />
-                    <span>{pkg.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* 4. Origine & Traçabilité */}
-            <div className="sidebar-filter-block">
-              <h4 className="filter-block-title">Origine Géographique</h4>
-              <div className="radio-options-list">
-                {ORIGIN_OPTIONS.map(orig => (
-                  <label key={orig.id} className="filter-radio-label">
-                    <input
-                      type="radio"
-                      name="origin"
-                      value={orig.id}
-                      checked={origin === orig.id}
-                      onChange={() => dispatch(setOrigin(orig.id))}
-                    />
-                    <span>{orig.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* 5. Critères de Qualité (Checkbox Toggles) */}
-            <div className="sidebar-filter-block">
-              <h4 className="filter-block-title">Critères Spéciaux</h4>
-              <div className="checkbox-toggles-list">
-                <label className="filter-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={onlyDiscounted}
-                    onChange={() => dispatch(toggleDiscounted())}
-                  />
-                  <span>En Promotion du mois</span>
-                </label>
-
-                <label className="filter-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={onlyOrganic}
-                    onChange={() => dispatch(toggleOrganic())}
-                  />
-                  <span>100% Naturel & BIO</span>
-                </label>
-
-                <label className="filter-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={onlyInStock}
-                    onChange={() => dispatch(toggleInStock())}
-                  />
-                  <span>En stock immédiat</span>
-                </label>
-              </div>
-            </div>
+        {/* Grille principale avec Sidebar Desktop */}
+        <div className="catalog-columns-wrapper">
+          {/* Sidebar Desktop (visible uniquement sur grand écran) */}
+          <aside className="desktop-filters-sidebar hide-mobile">
+            <FilterContent />
           </aside>
 
-          {/* ========================================================
-              CONTENU PRINCIPAL : HEADER RAYON + GRILLE DE PRODUITS
-             ======================================================== */}
-          <main className="catalog-products-main">
-            {/* Header du catalogue */}
-            <div className="catalog-top-header">
-              <div className="catalog-title-area">
-                <h2 className="catalog-active-title">{activeCategoryObj.label}</h2>
-                <span className="catalog-count-text">
+          {/* Tiroir Filtre Mobile (Bottom Sheet / Drawer quand actif) */}
+          {mobileFilterOpen && (
+            <div className="drawer-overlay" onClick={() => setMobileFilterOpen(false)}>
+              <div className="mobile-filter-sheet" onClick={(e) => e.stopPropagation()}>
+                <div className="mobile-sheet-header">
+                  <h3>Filtres & Préférences</h3>
+                  <button onClick={() => setMobileFilterOpen(false)} className="mobile-sheet-close">
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="mobile-sheet-body">
+                  <FilterContent />
+                </div>
+                <div className="mobile-sheet-footer">
+                  <button 
+                    onClick={() => setMobileFilterOpen(false)}
+                    className="btn-primary btn-block"
+                  >
+                    <span>Voir les {filteredProducts.length} fruits</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Colonne Principale : Produits */}
+          <main className="catalog-products-column">
+            {/* Header du catalogue Desktop */}
+            <div className="catalog-header-banner hide-mobile">
+              <div className="header-info-area">
+                <h2 className="rayon-title-text">{activeCategoryObj.label}</h2>
+                <span className="rayon-count-text">
                   <strong>{filteredProducts.length}</strong> référence{filteredProducts.length > 1 ? 's' : ''} disponible{filteredProducts.length > 1 ? 's' : ''}
                 </span>
               </div>
 
-              {/* Barre de tri e-commerce */}
-              <div className="catalog-sort-box">
-                <ArrowUpDown size={15} className="sort-icon text-muted" />
-                <span className="sort-label hide-mobile">Trier par :</span>
+              <div className="desktop-sort-box">
+                <span className="desktop-sort-label">Trier par :</span>
                 <select
                   value={sortBy}
                   onChange={(e) => dispatch(setSortBy(e.target.value))}
-                  className="catalog-sort-select"
+                  className="desktop-sort-select"
                 >
-                  <option value="featured">Recommandations</option>
+                  <option value="featured">Recommandations Fruico</option>
                   <option value="price-asc">Prix : Moins cher d'abord</option>
                   <option value="price-desc">Prix : Plus cher d'abord</option>
-                  <option value="rating">Meilleurs avis clients</option>
+                  <option value="rating">Meilleures notes clients</option>
                   <option value="name">Ordre alphabétique (A-Z)</option>
                 </select>
               </div>
             </div>
 
-            {/* Tags des filtres actifs */}
-            {hasActiveFilters && (
-              <div className="active-filters-tags-row">
-                <span className="tags-label">Filtres appliqués :</span>
+            {/* Badges des filtres actifs */}
+            {activeFiltersCount > 0 && (
+              <div className="active-filters-chips-row">
+                <span className="chips-lead">Filtres actifs :</span>
                 {category !== 'all' && (
-                  <span className="filter-tag-pill">
-                    Rayon: {activeCategoryObj.label}
+                  <span className="filter-chip">
+                    {activeCategoryObj.label}
                     <button onClick={() => dispatch(setCategory('all'))}>×</button>
                   </span>
                 )}
                 {searchQuery && (
-                  <span className="filter-tag-pill">
+                  <span className="filter-chip">
                     « {searchQuery} »
                     <button onClick={() => dispatch(setSearchQuery(''))}>×</button>
                   </span>
                 )}
                 {packaging !== 'all' && (
-                  <span className="filter-tag-pill">
+                  <span className="filter-chip">
                     Format: {packaging}
                     <button onClick={() => dispatch(setPackaging('all'))}>×</button>
                   </span>
                 )}
                 {origin !== 'all' && (
-                  <span className="filter-tag-pill">
+                  <span className="filter-chip">
                     Origine: {origin === 'dz' ? 'Algérie' : 'Import'}
                     <button onClick={() => dispatch(setOrigin('all'))}>×</button>
                   </span>
                 )}
                 {onlyDiscounted && (
-                  <span className="filter-tag-pill">
-                    Promotions
+                  <span className="filter-chip">
+                    En Promotion
                     <button onClick={() => dispatch(toggleDiscounted())}>×</button>
                   </span>
                 )}
                 {onlyOrganic && (
-                  <span className="filter-tag-pill">
+                  <span className="filter-chip">
                     Bio
                     <button onClick={() => dispatch(toggleOrganic())}>×</button>
                   </span>
@@ -327,7 +371,7 @@ export default function ProductCatalog({ onQuickView, onNotify }) {
 
             {/* Grille des Cartes Produits */}
             {filteredProducts.length > 0 ? (
-              <div className="retail-products-grid">
+              <div className="fruico-products-grid">
                 {filteredProducts.map(product => (
                   <ProductCard
                     key={product.id}
@@ -338,18 +382,17 @@ export default function ProductCatalog({ onQuickView, onNotify }) {
                 ))}
               </div>
             ) : (
-              /* État vide si aucune correspondance */
-              <div className="retail-empty-catalog">
-                <Frown size={44} className="text-muted mb-3" />
-                <h3 className="empty-title">Aucun fruit ne correspond à vos filtres</h3>
-                <p className="empty-desc">
-                  Vérifiez l'orthographe de votre recherche ou élargissez vos critères de sélection (prix, conditionnement).
+              <div className="catalog-empty-state-box">
+                <Frown size={44} className="text-frost mb-2" />
+                <h3 className="empty-heading">Aucun fruit ne correspond à votre sélection</h3>
+                <p className="empty-subtext">
+                  Modifiez vos critères de recherche ou réinitialisez les filtres pour découvrir tout le catalogue.
                 </p>
                 <button
                   onClick={() => dispatch(resetFilters())}
-                  className="btn-ecommerce-primary mt-3"
+                  className="btn-primary mt-4"
                 >
-                  <RotateCcw size={16} />
+                  <RotateCcw size={15} />
                   <span>Réinitialiser les filtres</span>
                 </button>
               </div>

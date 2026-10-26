@@ -7,8 +7,7 @@ import {
   Star, 
   Snowflake, 
   Plus, 
-  Minus,
-  Check
+  Minus 
 } from 'lucide-react';
 import { addToCart, updateQuantity, removeFromCart } from '../redux/cartSlice';
 import { toggleFavorite } from '../redux/favoritesSlice';
@@ -20,7 +19,7 @@ export default function ProductCard({ product, onQuickView, onNotify }) {
 
   const isFavorite = favoriteIds.includes(product.id);
   
-  // Vérifier si le produit est déjà présent dans le panier Redux
+  // Vérifier la présence dans le panier
   const cartItem = cartItems.find(item => item.id === product.id);
   const quantityInCart = cartItem ? cartItem.quantity : 0;
 
@@ -32,12 +31,12 @@ export default function ProductCard({ product, onQuickView, onNotify }) {
     }
   };
 
-  const handleIncreaseQuantity = (e) => {
+  const handleIncrease = (e) => {
     e.stopPropagation();
     dispatch(updateQuantity({ id: product.id, quantity: quantityInCart + 1 }));
   };
 
-  const handleDecreaseQuantity = (e) => {
+  const handleDecrease = (e) => {
     e.stopPropagation();
     if (quantityInCart === 1) {
       dispatch(removeFromCart(product.id));
@@ -51,151 +50,144 @@ export default function ProductCard({ product, onQuickView, onNotify }) {
     e.stopPropagation();
     dispatch(toggleFavorite(product.id));
     if (onNotify) {
-      onNotify(isFavorite ? `Retiré de vos favoris` : `❤️ Ajouté à vos favoris !`);
+      onNotify(isFavorite ? `Retiré des favoris` : `❤️ Ajouté aux favoris !`);
     }
   };
 
   return (
-    <article className="retail-product-card">
-      {/* Top Badges (Retail discounts, Bio, Algerian Terroir) */}
-      <div className="card-top-badges-container">
+    <article className="fruico-product-card">
+      {/* Badges Commerciaux */}
+      <div className="card-badges-container">
         {product.discountPercent > 0 && (
-          <span className="retail-badge badge-discount">-{product.discountPercent}%</span>
+          <span className="card-pill badge-promo">-{product.discountPercent}%</span>
         )}
         {product.isOrganic && (
-          <span className="retail-badge badge-bio">BIO</span>
+          <span className="card-pill badge-bio">BIO</span>
         )}
         {product.isAlgerian && (
-          <span className="retail-badge badge-origin">🇩🇿 Terroir DZ</span>
+          <span className="card-pill badge-dz">🇩🇿 Terroir DZ</span>
         )}
       </div>
 
       {/* Bouton Favoris */}
       <button 
         onClick={handleToggleFavorite}
-        className={`card-fav-icon-btn ${isFavorite ? 'is-favorite' : ''}`}
+        className={`card-wishlist-btn ${isFavorite ? 'active' : ''}`}
         title={isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
         aria-label="Ajouter aux favoris"
       >
-        <Heart size={18} className={isFavorite ? "fill-red text-red" : ""} />
+        <Heart size={17} className={isFavorite ? "fill-royal text-royal" : ""} />
       </button>
 
-      {/* Zone Image Produit avec zoom doux et aperçu rapide */}
-      <div className="card-image-box" onClick={() => onQuickView(product)}>
+      {/* Image du fruit avec aperçu rapide au clic */}
+      <div className="card-image-wrapper" onClick={() => onQuickView(product)}>
         <img 
           src={product.image} 
           alt={product.name} 
-          className="card-main-image"
+          className="card-fruit-img"
           loading="lazy"
         />
 
-        {/* Badge Température Surgélation */}
-        <div className="card-frost-badge">
-          <Snowflake size={11} className="text-cyan" />
+        <div className="card-frost-chip">
+          <Snowflake size={11} className="text-royal" />
           <span>{product.temperature}</span>
         </div>
 
-        {/* Bouton d'aperçu rapide au survol */}
         <button 
-          className="card-quick-view-hover"
+          className="card-quick-view-btn"
           onClick={(e) => {
             e.stopPropagation();
             onQuickView(product);
           }}
-          title="Voir la fiche détaillée et valeurs nutritionnelles"
+          title="Fiche produit détaillée"
         >
           <Eye size={15} />
           <span>Aperçu rapide</span>
         </button>
       </div>
 
-      {/* Corps de la carte */}
-      <div className="card-content-box">
-        {/* Catégorie & Provenance */}
-        <div className="card-meta-row">
-          <span className="card-category-tag">{product.categoryName}</span>
-          <span className="card-weight-pill">{product.weight}</span>
+      {/* Informations de la carte */}
+      <div className="card-body-content">
+        <div className="card-meta-line">
+          <span className="card-cat-name">{product.categoryName}</span>
+          <span className="card-format-tag">{product.weight}</span>
         </div>
 
-        {/* Titre du produit */}
-        <h3 className="card-product-title" onClick={() => onQuickView(product)} title={product.name}>
+        <h3 className="card-title-text" onClick={() => onQuickView(product)} title={product.name}>
           {product.name}
         </h3>
 
-        {/* Origine précise */}
-        <div className="card-origin-info">
-          <span>Origine : {product.origin}</span>
+        <div className="card-origin-line">
+          <span>{product.origin}</span>
         </div>
 
-        {/* Évaluation & Avis */}
-        <div className="card-rating-row">
-          <div className="rating-stars-list">
+        {/* Note étoiles */}
+        <div className="card-stars-line">
+          <div className="card-stars-flex">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                size={12} 
-                className={i < Math.floor(product.rating) ? "star-gold" : "star-muted"} 
+                size={11} 
+                className={i < Math.floor(product.rating) ? "star-active" : "star-inactive"} 
               />
             ))}
           </div>
-          <span className="rating-num">{product.rating}</span>
-          <span className="rating-reviews-count">({product.reviewsCount})</span>
+          <span className="card-rating-text">{product.rating}</span>
+          <span className="card-reviews-text">({product.reviewsCount})</span>
         </div>
 
         {/* Prix en Dinars Algériens & Prix au kilo */}
-        <div className="card-pricing-area">
-          <div className="price-main-line">
-            <span className="card-final-price">
-              {product.price.toLocaleString()} <span className="currency-unit">DZD</span>
+        <div className="card-pricing-block">
+          <div className="card-price-row">
+            <span className="card-price-dzd">
+              {product.price.toLocaleString()} <span className="dzd-label">DZD</span>
             </span>
             {product.oldPrice && (
-              <span className="card-strikethrough-price">
+              <span className="card-price-strikethrough">
                 {product.oldPrice.toLocaleString()} DZD
               </span>
             )}
           </div>
-          <div className="card-price-per-kilo">
+          <div className="card-kilo-price">
             soit {product.unitPriceDesc}
           </div>
         </div>
 
-        {/* Disponibilité en stock */}
-        <div className="card-stock-status">
-          <span className="stock-dot"></span>
-          <span className="stock-text">En stock ({product.stockCount} dispo)</span>
+        {/* Indicateur de stock */}
+        <div className="card-stock-indicator">
+          <span className="stock-green-dot"></span>
+          <span className="stock-desc-text">En stock ({product.stockCount} dispo)</span>
         </div>
 
-        {/* E-Commerce Interactive Quantity Stepper / Add to Cart */}
-        <div className="card-action-bottom">
+        {/* Bouton d'action / Stepper interactif */}
+        <div className="card-action-area">
           {quantityInCart === 0 ? (
             <button
               onClick={handleAddToCart}
-              className="btn-card-add-cart"
+              className="btn-add-cart-card"
               title="Ajouter au panier"
             >
-              <ShoppingCart size={16} />
-              <span>Ajouter au Panier</span>
+              <ShoppingCart size={15} />
+              <span>Ajouter</span>
             </button>
           ) : (
-            <div className="card-active-qty-stepper">
+            <div className="card-qty-stepper-box">
               <button
-                onClick={handleDecreaseQuantity}
-                className="qty-stepper-btn minus"
-                title="Diminuer la quantité"
+                onClick={handleDecrease}
+                className="stepper-btn minus"
                 aria-label="Diminuer"
               >
-                <Minus size={15} />
+                <Minus size={14} />
               </button>
-              <span className="qty-stepper-display">
+              <span className="stepper-count-num">
                 <strong>{quantityInCart}</strong> dans le panier
               </span>
               <button
-                onClick={handleIncreaseQuantity}
-                className="qty-stepper-btn plus"
-                title="Augmenter la quantité"
+                onClick={handleIncrease}
+                className="stepper-btn plus"
                 aria-label="Augmenter"
               >
-                <Plus size={15} />
+                <Plus size={14} />
               </button>
             </div>
           )}
