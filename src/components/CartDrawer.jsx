@@ -5,14 +5,15 @@ import {
   Trash2, 
   Plus, 
   Minus, 
-  ShoppingBag, 
+  ShoppingCart, 
   ArrowRight, 
   Tag, 
   Check, 
   AlertCircle,
   Truck,
   Sparkles,
-  Snowflake
+  Snowflake,
+  ShieldCheck
 } from 'lucide-react';
 import { 
   removeFromCart, 
@@ -37,7 +38,7 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
   const freeShippingProgress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
 
-  // Estimation des frais de livraison de base (ex: 450 DZD en moyenne)
+  // Livraison gratuite dès 5000 DZD ou panier vide
   const baseShippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 450;
   const grandTotal = Math.max(0, subtotal - discountAmount + baseShippingFee);
 
@@ -57,110 +58,110 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
 
   return (
     <div className="drawer-overlay" onClick={onClose}>
-      <aside className="cart-drawer-panel" onClick={(e) => e.stopPropagation()}>
+      <aside className="ecommerce-cart-drawer" onClick={(e) => e.stopPropagation()}>
         {/* En-tête du Panier */}
-        <div className="cart-drawer-header">
-          <div className="cart-header-title-box">
-            <ShoppingBag size={22} className="text-berry" />
-            <h2 className="cart-header-title">Mon Panier Surgelé</h2>
-            <span className="cart-items-counter-badge">
+        <div className="cart-header-row">
+          <div className="cart-title-with-badge">
+            <ShoppingCart size={22} className="text-accent" />
+            <h2 className="cart-main-heading">Mon Panier</h2>
+            <span className="cart-badge-total-items">
               {items.reduce((acc, it) => acc + it.quantity, 0)} articles
             </span>
           </div>
 
-          <button onClick={onClose} className="drawer-close-btn" aria-label="Fermer le panier">
+          <button onClick={onClose} className="cart-close-btn" aria-label="Fermer le panier">
             <X size={20} />
           </button>
         </div>
 
-        {/* Barre de progression livraison gratuite */}
+        {/* Barre de progression de la livraison gratuite */}
         {items.length > 0 && (
-          <div className="free-shipping-bar-container">
-            <div className="free-shipping-text">
+          <div className="cart-free-shipping-box">
+            <div className="free-shipping-status-line">
               <Truck size={16} className="text-cyan" />
               {remainingForFreeShipping > 0 ? (
                 <span>
-                  Ajoutez encore <strong>{remainingForFreeShipping.toLocaleString()} DZD</strong> pour la <strong>Livraison Gratuite</strong> !
+                  Plus que <strong>{remainingForFreeShipping.toLocaleString()} DZD</strong> pour la <strong>Livraison Gratuite</strong> !
                 </span>
               ) : (
-                <span className="free-shipping-unlocked">
-                  <Sparkles size={14} className="text-amber inline" /> Félicitations ! Livraison Gratuite débloquée !
+                <span className="free-shipping-achieved">
+                  <Sparkles size={14} className="text-amber inline" /> Livraison frigorifique offerte !
                 </span>
               )}
             </div>
-            <div className="shipping-progress-track">
+            <div className="free-shipping-track">
               <div 
-                className="shipping-progress-fill" 
+                className="free-shipping-bar" 
                 style={{ width: `${freeShippingProgress}%` }}
               ></div>
             </div>
           </div>
         )}
 
-        {/* Corps du panier : Liste des articles */}
-        <div className="cart-drawer-body">
+        {/* Liste des articles du panier */}
+        <div className="cart-scroll-items-area">
           {items.length === 0 ? (
-            <div className="cart-empty-state">
-              <div className="cart-empty-icon-box">
-                <Snowflake size={40} className="text-cyan" />
+            <div className="cart-empty-wrapper">
+              <div className="cart-empty-icon-circle">
+                <Snowflake size={36} className="text-cyan" />
               </div>
-              <h3>Votre panier est vide</h3>
-              <p>
-                Vos smoothies et desserts vous attendent ! Découvrez nos fruits surgelés de saison.
+              <h3 className="empty-cart-title">Votre panier est actuellement vide</h3>
+              <p className="empty-cart-text">
+                Remplissez votre congélateur de fruits savoureux pour vos smoothies, glaces et desserts !
               </p>
-              <button onClick={onClose} className="btn btn-primary mt-4">
-                Explorer nos fruits
+              <button onClick={onClose} className="btn-ecommerce-primary mt-4">
+                Découvrir nos fruits surgelés
               </button>
             </div>
           ) : (
-            <div className="cart-items-list">
+            <div className="cart-products-list">
               {items.map((item) => {
                 const itemTotal = item.price * item.quantity;
                 return (
-                  <div key={item.id} className="cart-item-card">
-                    <img src={item.image} alt={item.name} className="cart-item-img" />
+                  <div key={item.id} className="cart-single-item-card">
+                    <img src={item.image} alt={item.name} className="cart-product-thumb" />
 
-                    <div className="cart-item-info">
-                      <div className="cart-item-header">
-                        <h4 className="cart-item-name">{item.name}</h4>
+                    <div className="cart-product-details">
+                      <div className="cart-product-header">
+                        <h4 className="cart-item-title">{item.name}</h4>
                         <button
                           onClick={() => handleRemoveItem(item.id, item.name)}
-                          className="cart-item-delete-btn"
-                          title="Supprimer l'article"
+                          className="cart-delete-item-btn"
+                          title="Supprimer cet article"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={15} />
                         </button>
                       </div>
 
-                      <div className="cart-item-meta">
-                        <span className="cart-item-weight">{item.weight}</span>
-                        <span className="cart-item-unit-price">
-                          {item.price.toLocaleString()} DZD / unité
-                        </span>
+                      <div className="cart-item-weight-line">
+                        <span>Format : {item.weight}</span>
+                        <span>•</span>
+                        <span>{item.price.toLocaleString()} DZD / sachet</span>
                       </div>
 
-                      {/* Sélecteur de quantité & Total de la ligne */}
-                      <div className="cart-item-footer">
-                        <div className="cart-qty-controls">
+                      <div className="cart-item-bottom-controls">
+                        {/* Stepper de quantité (+ / -) */}
+                        <div className="cart-stepper">
                           <button
                             onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))}
-                            className="cart-qty-btn"
+                            className="cart-stepper-btn"
                             aria-label="Diminuer"
                           >
-                            <Minus size={14} />
+                            <Minus size={13} />
                           </button>
-                          <span className="cart-qty-number">{item.quantity}</span>
+                          <span className="cart-stepper-number">{item.quantity}</span>
                           <button
                             onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
-                            className="cart-qty-btn"
+                            className="cart-stepper-btn"
                             aria-label="Augmenter"
                           >
-                            <Plus size={14} />
+                            <Plus size={13} />
                           </button>
                         </div>
 
-                        <div className="cart-item-subtotal">
-                          {itemTotal.toLocaleString()} <span className="dzd-currency">DZD</span>
+                        {/* Sous-total de la ligne */}
+                        <div className="cart-line-total-price">
+                          {itemTotal.toLocaleString()} <span className="dzd-small">DZD</span>
                         </div>
                       </div>
                     </div>
@@ -171,40 +172,40 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
           )}
         </div>
 
-        {/* Pied du panier avec Code Promo et Résumé financier */}
+        {/* Pied de Panier avec Code Promo et Résumé financier */}
         {items.length > 0 && (
-          <div className="cart-drawer-footer">
-            {/* Formulaire Code Promo */}
-            <form onSubmit={handleApplyPromo} className="promo-code-form">
-              <div className="promo-input-group">
-                <Tag size={16} className="text-muted" />
+          <div className="cart-sticky-footer">
+            {/* Formulaire de Code Promo */}
+            <form onSubmit={handleApplyPromo} className="cart-promo-container">
+              <div className="promo-input-wrapper">
+                <Tag size={15} className="text-muted" />
                 <input
                   type="text"
                   placeholder="Code promo (ex: ENSTA2026)"
                   value={inputCode}
                   onChange={(e) => setInputCode(e.target.value)}
-                  className="promo-input"
+                  className="promo-text-field"
                 />
-                <button type="submit" className="promo-apply-btn">
+                <button type="submit" className="promo-btn-apply">
                   Appliquer
                 </button>
               </div>
 
               {promoError && (
-                <div className="promo-error-message">
-                  <AlertCircle size={14} />
+                <div className="promo-error-alert">
+                  <AlertCircle size={13} />
                   <span>{promoError}</span>
                 </div>
               )}
 
               {promoCode && (
-                <div className="promo-active-badge">
-                  <Check size={14} className="text-emerald" />
-                  <span>Remise {promoCode} (-{discountPercent}%) appliquée !</span>
+                <div className="promo-success-alert">
+                  <Check size={13} />
+                  <span>Code <strong>{promoCode}</strong> appliqué (-{discountPercent}%)</span>
                   <button 
                     type="button" 
                     onClick={() => dispatch(removePromoCode())}
-                    className="promo-remove-btn"
+                    className="promo-btn-remove"
                   >
                     <X size={12} />
                   </button>
@@ -212,49 +213,49 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
               )}
             </form>
 
-            {/* Récapitulatif des montants */}
-            <div className="cart-summary-table">
-              <div className="summary-row">
+            {/* Tableau récapitulatif */}
+            <div className="cart-financial-summary">
+              <div className="financial-row">
                 <span>Sous-total articles</span>
                 <span>{subtotal.toLocaleString()} DZD</span>
               </div>
 
               {discountAmount > 0 && (
-                <div className="summary-row discount-row">
-                  <span>Remise ({discountPercent}%)</span>
+                <div className="financial-row discount-line">
+                  <span>Remise déduite ({discountPercent}%)</span>
                   <span>-{discountAmount.toLocaleString()} DZD</span>
                 </div>
               )}
 
-              <div className="summary-row">
-                <span>Livraison frigorifique</span>
+              <div className="financial-row">
+                <span>Frais de livraison frigorifique</span>
                 <span>
                   {baseShippingFee === 0 ? (
-                    <strong className="text-emerald">Gratuite</strong>
+                    <strong className="text-emerald">Gratuite (≥ 5 000 DZD)</strong>
                   ) : (
                     `${baseShippingFee} DZD`
                   )}
                 </span>
               </div>
 
-              <div className="summary-divider"></div>
+              <div className="financial-separator"></div>
 
-              <div className="summary-row total-row">
-                <span>Total estimé (TTC)</span>
-                <span className="total-amount-highlight">
+              <div className="financial-row total-highlight-row">
+                <span>Total à régler (TTC)</span>
+                <span className="total-highlight-price">
                   {grandTotal.toLocaleString()} <small>DZD</small>
                 </span>
               </div>
             </div>
 
-            {/* Actions principales du panier */}
-            <div className="cart-footer-buttons">
+            {/* Boutons d'action */}
+            <div className="cart-checkout-actions">
               <button
                 onClick={() => {
                   onClose();
                   onProceedToCheckout();
                 }}
-                className="btn btn-primary btn-block checkout-cta-btn"
+                className="btn-ecommerce-primary btn-block checkout-btn-pulse"
               >
                 <span>Commander ({grandTotal.toLocaleString()} DZD)</span>
                 <ArrowRight size={18} />
@@ -262,13 +263,13 @@ export default function CartDrawer({ isOpen, onClose, onProceedToCheckout, onNot
 
               <button
                 onClick={() => {
-                  if (window.confirm("Êtes-vous sûr de vouloir vider tout votre panier ?")) {
+                  if (window.confirm("Êtes-vous sûr de vouloir vider l'ensemble du panier ?")) {
                     dispatch(clearCart());
                   }
                 }}
-                className="btn-clear-cart"
+                className="btn-clear-cart-text"
               >
-                <Trash2 size={14} />
+                <Trash2 size={13} />
                 <span>Vider le panier</span>
               </button>
             </div>

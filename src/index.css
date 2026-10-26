@@ -1,89 +1,82 @@
 /* ==========================================================================
-   FRUICO - DESIGN SYSTEM & GLOBAL STYLES
-   Module: WAMD - TD-TP 2 (ENSTA 2026)
-   Spécialité: E-commerce de Fruits Surgelés (-18°C)
+   FRUICO - DESIGN SYSTEM E-COMMERCE ALIMENTAIRE
+   Style authentique supermarché & boutique de produits surgelés (-18°C)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
 
 :root {
-  /* Palette Claire (Light Mode) */
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  
-  --text-primary: #0f172a;
+  /* Palette E-Commerce Professionnelle (Light Mode) */
+  --bg-page: #f4f6f8;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-muted: #eef2f6;
+
+  --text-main: #1e293b;
+  --text-heading: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-light: #94a3b8;
 
-  --border-color: #e2e8f0;
-  --border-light: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --border-main: #cbd5e1;
 
-  /* Accents Fruico: Fraise rubis, Myrtille givrée, Menthe & Cyan arctique */
-  --frost-cyan: #06b6d4;
-  --frost-cyan-light: #e0f2fe;
-  --frost-blue: #0284c7;
-  --berry-red: #e11d48;
-  --berry-red-light: #ffe4e6;
-  --berry-dark: #9f1239;
-  --emerald-fresh: #059669;
-  --emerald-light: #d1fae5;
-  --amber-warm: #d97706;
-  --amber-light: #fef3c7;
+  /* Couleurs de marque : Bleu Glacier Retail & Rouge Remise */
+  --brand-primary: #0284c7;       /* Bleu Océan Frais */
+  --brand-primary-hover: #0369a1;
+  --brand-dark: #0f2744;          /* Bleu Marine Retail */
+  --brand-accent: #e11d48;        /* Rouge Vente / Promo */
+  --brand-accent-hover: #be123c;
+  --brand-cyan: #06b6d4;          /* Cyan Froid -18°C */
+  
+  --status-green: #16a34a;        /* En stock */
+  --status-green-light: #dcfce7;
+  --status-amber: #d97706;
+  --status-amber-light: #fef3c7;
+  --status-red-light: #ffe4e6;
 
-  /* Ombres & Effets de verre (Glassmorphism) */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
 
-  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 10px 20px -5px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-dropdown: 0 12px 28px rgba(0, 0, 0, 0.15);
 
-  --header-height: 76px;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Outfit', 'Inter', sans-serif;
+
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
 }
 
 /* Palette Sombre (Dark Mode) */
 .dark {
-  --bg-primary: #0b1120;
-  --bg-secondary: #0f172a;
-  --bg-tertiary: #1e293b;
-  --bg-card: #151f32;
-  --bg-card-hover: #1e293b;
+  --bg-page: #0b1120;
+  --bg-surface: #151f32;
+  --bg-subtle: #1e293b;
+  --bg-muted: #27354a;
 
-  --text-primary: #f8fafc;
+  --text-main: #f1f5f9;
+  --text-heading: #ffffff;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
   --text-light: #64748b;
 
-  --border-color: #334155;
-  --border-light: #1e293b;
+  --border-subtle: #27354a;
+  --border-main: #334155;
 
-  --frost-cyan-light: rgba(6, 182, 212, 0.15);
-  --berry-red-light: rgba(225, 29, 72, 0.2);
-  --emerald-light: rgba(5, 150, 105, 0.2);
-  --amber-light: rgba(217, 119, 6, 0.2);
+  --status-green-light: rgba(22, 163, 74, 0.2);
+  --status-red-light: rgba(225, 29, 72, 0.2);
+  --status-amber-light: rgba(217, 119, 6, 0.2);
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.8);
-  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 2px 5px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
 
-/* Base reset */
+/* Reset de base */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -91,18 +84,17 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-main);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.6;
-  min-height: 100vh;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 #root {
@@ -111,12 +103,20 @@ body {
   flex-direction: column;
 }
 
-/* Typographie */
+/* Conteneur fluide e-commerce */
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* Typographie standard */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
+  color: var(--text-heading);
   font-weight: 700;
   line-height: 1.25;
-  color: var(--text-primary);
 }
 
 a {
@@ -126,143 +126,70 @@ a {
 
 button {
   cursor: pointer;
-  font-family: inherit;
   border: none;
   background: none;
-  transition: all var(--transition-normal);
+  font-family: inherit;
+  transition: all var(--transition-fast);
 }
 
 input, select, textarea {
   font-family: inherit;
-  font-size: 0.95rem;
+  color: inherit;
 }
 
-/* Layout Container */
-.container {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-
-@media (min-width: 768px) {
-  .container {
-    padding: 0 2rem;
-  }
-}
-
-/* Badges & Pills */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.badge-frost {
-  background: var(--frost-cyan-light);
-  color: var(--frost-blue);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-}
-
-.badge-berry {
-  background: var(--berry-red-light);
-  color: var(--berry-red);
-}
-
-.badge-emerald {
-  background: var(--emerald-light);
-  color: var(--emerald-fresh);
-}
-
-.badge-amber {
-  background: var(--amber-light);
-  color: var(--amber-warm);
-}
-
-/* Buttons System */
-.btn {
+/* Boutons E-Commerce */
+.btn-ecommerce-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-weight: 600;
+  background: var(--brand-accent);
+  color: #ffffff;
+  font-weight: 700;
   font-size: 0.95rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-normal);
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.25);
+  transition: all var(--transition-fast);
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #e11d48, #be123c);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #be123c, #9f1239);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
-}
-
-.btn-frost {
-  background: linear-gradient(135deg, #0284c7, #06b6d4);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
-}
-
-.btn-frost:hover {
-  background: linear-gradient(135deg, #0369a1, #0891b2);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.45);
-}
-
-.btn-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-  background: var(--border-color);
+.btn-ecommerce-primary:hover {
+  background: var(--brand-accent-hover);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
 }
 
-.btn-icon {
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border-radius: var(--radius-full);
-  display: flex;
+.btn-ecommerce-secondary {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  color: var(--text-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-main);
+  box-shadow: var(--shadow-card);
 }
 
-.btn-icon:hover {
-  background: var(--border-color);
-  color: var(--berry-red);
+.btn-ecommerce-secondary:hover {
+  background: var(--bg-muted);
+  border-color: var(--text-muted);
 }
 
-/* Modals & Overlays */
+/* Modales & Tiroirs */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
+  backdrop-filter: blur(4px);
+  z-index: 1050;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 1.25rem;
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -270,9 +197,9 @@ input, select, textarea {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-  animation: fadeIn 0.25s ease-out;
+  backdrop-filter: blur(3px);
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
@@ -286,38 +213,23 @@ input, select, textarea {
 }
 
 @keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.94); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Price Display Helper */
-.price-tag {
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--berry-red);
-  letter-spacing: -0.5px;
-}
-
-.price-currency {
-  font-size: 0.75em;
-  font-weight: 700;
-  margin-left: 3px;
-  color: var(--text-muted);
-}
-
-/* Custom Scrollbar */
+/* Scrollbars sobres */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: var(--bg-subtle);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
+  background: var(--border-main);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {

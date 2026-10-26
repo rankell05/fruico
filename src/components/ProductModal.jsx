@@ -4,14 +4,15 @@ import {
   X, 
   Minus, 
   Plus, 
-  ShoppingBag, 
+  ShoppingCart, 
   Heart, 
   Snowflake, 
   Star, 
   CheckCircle, 
-  ShieldAlert,
+  ShieldCheck,
   Flame,
-  Award
+  Truck,
+  RotateCcw
 } from 'lucide-react';
 import { addToCart } from '../redux/cartSlice';
 import { toggleFavorite } from '../redux/favoritesSlice';
@@ -21,11 +22,10 @@ export default function ProductModal({ product, onClose, onNotify }) {
   const favoriteIds = useSelector(state => state.favorites.items);
   const isFavorite = favoriteIds.includes(product?.id);
 
-  // Utilisation de l'état local (React local state) pour la sélection de quantité
-  // comme requis dans le TP (différencier state local vs state global Redux)
+  // État local React pour la quantité sélectionnée
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  // Fermer le modal avec la touche Échap
+  // Fermeture par touche Échap
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -63,118 +63,141 @@ export default function ProductModal({ product, onClose, onNotify }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="product-modal-dialog" onClick={(e) => e.stopPropagation()}>
+      <div className="ecommerce-modal-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Bouton Fermer */}
-        <button className="modal-close-btn" onClick={onClose} aria-label="Fermer">
+        <button className="modal-close-icon-btn" onClick={onClose} aria-label="Fermer la fiche produit">
           <X size={20} />
         </button>
 
-        <div className="modal-grid">
-          {/* Colonne visuelle */}
-          <div className="modal-visual-col">
-            <div className="modal-image-wrapper">
-              <img src={product.image} alt={product.name} className="modal-product-img" />
-              <div className="modal-temp-badge">
+        <div className="modal-two-columns">
+          {/* Colonne Gauche : Photo réelle du fruit surgelé */}
+          <div className="modal-image-column">
+            <div className="modal-photo-container">
+              <img src={product.image} alt={product.name} className="modal-main-fruit-img" />
+              <div className="modal-temp-guarantee">
                 <Snowflake size={14} className="text-cyan" />
-                <span>{product.temperature} Contrôlé</span>
+                <span>Chaîne du froid certifiée {product.temperature}</span>
               </div>
             </div>
 
-            {/* Origine et labels */}
-            <div className="modal-badges-row">
-              <span className="badge badge-frost">{product.origin}</span>
-              {product.isOrganic && <span className="badge badge-emerald">100% Bio</span>}
-              <span className="badge badge-amber">{product.weight}</span>
+            {/* Badges de labels */}
+            <div className="modal-labels-flex">
+              {product.isAlgerian && (
+                <span className="modal-badge-chip origin">🇩🇿 Terroir Algérien</span>
+              )}
+              {product.isOrganic && (
+                <span className="modal-badge-chip bio">🌿 100% Naturel & Bio</span>
+              )}
+              <span className="modal-badge-chip weight">📦 Sachet de {product.weight}</span>
             </div>
           </div>
 
-          {/* Colonne informations & interactions */}
-          <div className="modal-info-col">
-            <div className="modal-category">{product.categoryName}</div>
-            <h2 className="modal-title">{product.name}</h2>
+          {/* Colonne Droite : Fiche détaillée de vente en ligne */}
+          <div className="modal-details-column">
+            <div className="modal-category-path">
+              <span>Rayon : {product.categoryName}</span>
+            </div>
 
-            {/* Note et avis */}
-            <div className="modal-rating-row">
-              <div className="stars-wrapper">
+            <h2 className="modal-product-name">{product.name}</h2>
+
+            <div className="modal-ratings-line">
+              <div className="modal-stars-group">
                 {[...Array(5)].map((_, i) => (
                   <Star 
                     key={i} 
-                    size={16} 
-                    className={i < Math.floor(product.rating) ? "star-filled" : "star-empty"} 
+                    size={15} 
+                    className={i < Math.floor(product.rating) ? "star-gold" : "star-muted"} 
                   />
                 ))}
               </div>
-              <span className="rating-score">{product.rating}</span>
-              <span className="rating-count">({product.reviewsCount} avis clients vérifiés)</span>
+              <span className="modal-rating-val">{product.rating} / 5</span>
+              <span className="modal-reviews-count">({product.reviewsCount} avis clients certifiés)</span>
             </div>
 
-            {/* Prix en DZD */}
-            <div className="modal-price-box">
-              <div className="modal-price-main">
-                {product.price.toLocaleString()} <span className="dzd-currency">DZD</span>
+            {/* Prix en Dinars Algériens & Prix au kilo */}
+            <div className="modal-price-container">
+              <div className="modal-price-tag">
+                <span className="modal-current-price">
+                  {product.price.toLocaleString()} <span className="modal-dzd">DZD</span>
+                </span>
+                {product.oldPrice && (
+                  <span className="modal-old-price">
+                    {product.oldPrice.toLocaleString()} DZD
+                  </span>
+                )}
+                {product.discountPercent > 0 && (
+                  <span className="modal-promo-pill">Économisez {product.discountPercent}%</span>
+                )}
               </div>
-              {product.oldPrice && (
-                <div className="modal-price-old">
-                  {product.oldPrice.toLocaleString()} DZD
-                </div>
-              )}
-              {product.discountPercent > 0 && (
-                <span className="badge badge-berry">Économisez {product.discountPercent}%</span>
-              )}
+              <div className="modal-unit-price-desc">
+                Prix au kilo : <strong>{product.unitPriceDesc}</strong>
+              </div>
             </div>
 
-            {/* Description détaillée */}
-            <p className="modal-description">{product.description}</p>
+            {/* Disponibilité & Délai de livraison */}
+            <div className="modal-stock-banner">
+              <div className="stock-line">
+                <span className="stock-bullet-green"></span>
+                <span><strong>En stock</strong> à l'entrepôt frigorifique central</span>
+              </div>
+              <div className="delivery-line">
+                <Truck size={14} className="text-accent" />
+                <span>Livraison frigorifique disponible dans les 58 Wilayas</span>
+              </div>
+            </div>
+
+            {/* Description complète */}
+            <p className="modal-long-desc">{product.description}</p>
 
             {/* Tableau des valeurs nutritionnelles */}
             {product.nutrition && (
-              <div className="modal-nutrition-card">
-                <div className="nutrition-header">
-                  <Flame size={16} className="text-berry" />
-                  <span>Valeurs Nutritionnelles moyennes (pour 100g)</span>
+              <div className="modal-nutrition-table-box">
+                <div className="nutrition-table-header">
+                  <Flame size={15} className="text-red" />
+                  <span>Valeurs nutritionnelles moyennes (pour 100g de fruit)</span>
                 </div>
-                <div className="nutrition-grid">
-                  <div className="nutrition-item">
-                    <span className="nutrition-label">Énergie</span>
-                    <span className="nutrition-value">{product.nutrition.calories}</span>
+                <div className="nutrition-items-row">
+                  <div className="nutrition-cell">
+                    <span className="nutri-label">Énergie</span>
+                    <span className="nutri-val">{product.nutrition.calories}</span>
                   </div>
-                  <div className="nutrition-item">
-                    <span className="nutrition-label">Vitamine C</span>
-                    <span className="nutrition-value">{product.nutrition.vitamineC}</span>
+                  <div className="nutrition-cell">
+                    <span className="nutri-label">Vitamine C</span>
+                    <span className="nutri-val">{product.nutrition.vitamineC}</span>
                   </div>
-                  <div className="nutrition-item">
-                    <span className="nutrition-label">Fibres</span>
-                    <span className="nutrition-value">{product.nutrition.fibres}</span>
+                  <div className="nutrition-cell">
+                    <span className="nutri-label">Fibres</span>
+                    <span className="nutri-val">{product.nutrition.fibres}</span>
                   </div>
-                  <div className="nutrition-item">
-                    <span className="nutrition-label">Sucres</span>
-                    <span className="nutrition-value">{product.nutrition.sucre}</span>
+                  <div className="nutrition-cell">
+                    <span className="nutri-label">Sucres</span>
+                    <span className="nutri-val">{product.nutrition.sucre}</span>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Conseil de dégustation */}
-            <div className="modal-prep-tip">
-              <strong>💡 Astuce Fruico :</strong> {product.prepTip}
+            {/* Astuce de préparation & décongélation */}
+            <div className="modal-prep-box">
+              <strong>Conseil du chef :</strong> {product.prepTip}
             </div>
 
-            {/* Sélecteur de quantité locale (React State) & Ajout au panier Redux */}
-            <div className="modal-actions-area">
-              <div className="quantity-selector-box">
+            {/* Actions d'achat (Sélecteur de quantité & Ajout au panier) */}
+            <div className="modal-buy-controls-bar">
+              <div className="modal-qty-selector">
                 <button 
                   onClick={handleDecrease}
-                  className="qty-btn"
+                  className="modal-qty-btn"
                   disabled={selectedQuantity <= 1}
-                  aria-label="Diminuer la quantité"
+                  aria-label="Diminuer"
                 >
                   <Minus size={16} />
                 </button>
-                <span className="qty-value">{selectedQuantity}</span>
+                <span className="modal-qty-count">{selectedQuantity}</span>
                 <button 
                   onClick={handleIncrease}
-                  className="qty-btn"
-                  aria-label="Augmenter la quantité"
+                  className="modal-qty-btn"
+                  aria-label="Augmenter"
                 >
                   <Plus size={16} />
                 </button>
@@ -182,16 +205,16 @@ export default function ProductModal({ product, onClose, onNotify }) {
 
               <button 
                 onClick={handleAddToCart}
-                className="btn btn-primary modal-add-cart-btn"
+                className="btn-ecommerce-primary modal-cart-action-btn"
               >
-                <ShoppingBag size={18} />
-                <span>Ajouter • {calculatedTotal.toLocaleString()} DZD</span>
+                <ShoppingCart size={18} />
+                <span>Ajouter au Panier • {calculatedTotal.toLocaleString()} DZD</span>
               </button>
 
               <button 
                 onClick={handleToggleFavorite}
-                className={`modal-favorite-btn ${isFavorite ? 'is-fav' : ''}`}
-                title="Ajouter aux favoris"
+                className={`modal-wishlist-btn ${isFavorite ? 'active' : ''}`}
+                title="Ajouter à mes favoris"
               >
                 <Heart size={20} className={isFavorite ? "fill-red text-red" : ""} />
               </button>

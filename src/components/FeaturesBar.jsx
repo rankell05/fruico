@@ -4,38 +4,40 @@ import { Snowflake, Truck, ShieldCheck, HeartPulse } from 'lucide-react';
 export default function FeaturesBar() {
   const features = [
     {
-      icon: <Snowflake className="feature-icon text-cyan" size={28} />,
-      title: "Technologie IQF -18°C",
-      desc: "Chaque fruit est surgelé individuellement en quelques minutes pour préserver 100% du croquant et des vitamines."
+      icon: <Snowflake className="retail-trust-icon text-cyan" size={24} />,
+      title: "Chaîne du froid -18°C",
+      desc: "Emballages isothermes certifiés avec blocs de froid négatif."
     },
     {
-      icon: <Truck className="feature-icon text-indigo" size={28} />,
-      title: "Livraison Isotherme 58 Wilayas",
-      desc: "Expédition dans des colis isothermes avec accumulateurs de froid. Arrivée parfaitement givrée chez vous."
+      icon: <Truck className="retail-trust-icon text-accent" size={24} />,
+      title: "Livraison 58 Wilayas",
+      desc: "Expédition frigorifique rapide. Gratuite dès 5 000 DZD."
     },
     {
-      icon: <HeartPulse className="feature-icon text-berry" size={28} />,
-      title: "100% Fruits Purs & Naturels",
-      desc: "Zéro conservateur, zéro sirop, zéro colorant. Uniquement le fruit mûr récolté en saison."
+      icon: <HeartPulse className="retail-trust-icon text-red" size={24} />,
+      title: "100% Fruits Purs & IQF",
+      desc: "Surgélation unitaire, aucun fruit collé en bloc, zéro sucre ajouté."
     },
     {
-      icon: <ShieldCheck className="feature-icon text-emerald" size={28} />,
+      icon: <ShieldCheck className="retail-trust-icon text-emerald" size={24} />,
       title: "Paiement à la Réception",
-      desc: "Réglez votre commande en toute sérénité en dinars algériens (DZD) lors de la livraison à domicile."
+      desc: "Réglez en toute sécurité en espèces lors de la livraison."
     }
   ];
 
   return (
-    <section className="features-bar-section" id="engagements">
+    <section className="retail-trust-bar">
       <div className="container">
-        <div className="features-grid">
+        <div className="trust-items-grid">
           {features.map((item, idx) => (
-            <div key={idx} className="feature-card">
-              <div className="feature-icon-wrapper">
+            <div key={idx} className="trust-item-box">
+              <div className="trust-icon-box">
                 {item.icon}
               </div>
-              <h3 className="feature-title">{item.title}</h3>
-              <p className="feature-desc">{item.desc}</p>
+              <div className="trust-text-box">
+                <h4 className="trust-title">{item.title}</h4>
+                <p className="trust-desc">{item.desc}</p>
+              </div>
             </div>
           ))}
         </div>
